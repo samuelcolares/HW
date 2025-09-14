@@ -1,69 +1,120 @@
-# React + TypeScript + Vite
+# Frontend Test for CoverPin Company
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React + TypeScript + Vite frontend that showcases a Leads & Opportunities dashboard with an enhanced, composable data table, mock API via JSON Server, lead generation with Faker, optimistic UI updates, filtering, column visibility controls, and export to PDF/CSV.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Leads & Opportunities views with tabbed navigation
+- Enhanced table (TanStack Table) with:
+  - Global search, sheet-based advanced filters, and quick clear
+  - Column visibility and header variants (toggle vs dropdown)
+  - Row selection with sidebar details (for leads)
+  - Pagination
+- Export
+  - Export visible or all rows to PDF or CSV (jsPDF + jspdf-autotable)
+  - Per-column export metadata for header customization
+- Leads generator
+  - Generate N leads using Faker
+  - Optimistic UI with simulated latency/failures
+  - Status filter persisted via URL params and localStorage
+- Opportunities form
+  - Convert lead to opportunity via dialog form
+  - Validate with Zod + React Hook Form
+  - Optional combobox for selecting existing account names
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- React 19, TypeScript, Vite 7
+- Tailwind CSS 4, Radix UI primitives
+- TanStack Table, React Hook Form, Zod
+- Framer Motion
+- Axios, JSON Server (mock API)
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Quick Start
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+Prerequisites:
+- Node.js 18+ (recommend LTS)
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Install dependencies:
+```bash979Z"
+}
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## How to Use
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- Toggle views: Use the Smooth Tabs at the top of the card to switch between Leads and Opportunities.
+- Generate leads: In the Leads view, set a number and click the button to generate/refresh leads.
+  - This triggers optimistic UI and a simulated async save; failures roll back the UI.
+- Filter leads:
+  - Use the status multi-select; selections are reflected in URL params and saved to localStorage.
+  - Use the search input and the filter sheet for finer controls.
+- Table options:
+  - Toggle column visibility and header variant (default toggle vs dropdown).
+  - Export:
+    - Export visible rows or all rows to PDF/CSV from the toolbar menu.
+    - Column export headers can be customized via column `meta.export` settings.
+- Convert lead to opportunity:
+  - Open the “Convert Lead” dialog, fill fields, and submit.
+  - Validation is handled with Zod; successful creation writes to the mock API.
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Project Structure (key parts)
+
+```text
+src/
+  components/
+    enhanced-table/
+      composition-pattern/
+        filters/            # input, sheet, clear, variants, advanced filter hook
+        header/             # header variants (toggle, dropdown)
+        toolbar/            # export to PDF/CSV, view options
+        body/               # table body + row editor
+        enhanced-table.tsx
+        root.tsx
+        pagination.tsx
+        utils.ts
+      table-context.tsx
+    leads/
+      index.tsx             # main leads screen & tabs
+      columns.tsx           # leads column definitions
+      sidebar.tsx           # lead details sidebar
+    opportunities/
+      index.tsx
+      columns.tsx
+      form.tsx              # convert lead dialog form
+    ui/ ...                 # button, dialog, input, select, etc.
+  hooks/
+    use-fake-promises.ts    # simulated success/failure + latency
+  lib/
+    faker.ts                # generate leads with @faker-js/faker
+    types/                  # Lead & Opportunity types
+    utils.ts
+  providers/
+    leads.provider.tsx
+    opportunities.provider.tsx
 ```
+
+## Implementation Details
+
+- Leads provider:
+  - Generates N leads (`lib/faker.ts`), sets them optimistically, then persists to `/leads`.
+  - On generate/refresh: deletes existing leads and inserts the new ones.
+  - Status filter is synced to URL (`leads-filters-status`) and `localStorage`.
+- Opportunities provider:
+  - Loads from `/opportunities` on startup.
+- Export:
+  - PDF via jsPDF + `jspdf-autotable`, CSV via Blob download.
+  - Export applies a per-column `meta.export` policy (can disable per format or customize headers).
+
+## Troubleshooting
+
+- Blank data or errors:
+  - Ensure the mock API is running (`npm run db`) on port 5000.
+  - Verify ports 3000 (app) and 5000 (API) are free.
+- Network errors:
+  - Check CORS or firewall rules; JSON Server should be reachable at `http://localhost:5000`.
+- Build issues:
+  - Use Node 18+; delete `node_modules` and reinstall if needed.
+
+## License
+
+MIT
