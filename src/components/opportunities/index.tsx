@@ -16,12 +16,12 @@ export default function Opportunities() {
         <EnhancedTable.Root
           data={opportunities}
           columns={columns}
-          tableName="leads"
+          tableName="opportunities"
           noData={optimisticOpportunities.length === 0}
           emptyComponent={
             <div className="flex flex-col items-center justify-center h-full space-y-4">
               <p className="text-xl text-muted-foreground">
-                No leads found. Add some leads by clicking the button below to
+                No opportunities found. Add some opportunities by clicking the button below to
                 get started.
               </p>
               <OpportunityForm />
