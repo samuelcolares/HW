@@ -32,7 +32,7 @@ export function Sheet() {
       <SheetTrigger asChild>
         <Button variant="outline">
           <FileSpreadsheet className="w-4 h-4 mr-2" />
-          Sheet Filter
+          Filters
         </Button>
       </SheetTrigger>
 

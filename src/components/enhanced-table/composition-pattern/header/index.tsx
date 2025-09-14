@@ -12,13 +12,13 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { type Header, flexRender } from "@tanstack/react-table";
-import { ArrowUpDown, GripHorizontal } from "lucide-react";
+import { ArrowDownIcon, ArrowUpDown, ArrowUpIcon, GripHorizontal } from "lucide-react";
 import type { CSSProperties } from "react";
 import { useTableContext } from "../../table-context";
 import { getAlignment, isSpecialId } from "../utils";
 import { HeaderDropdown } from "./dropdown";
 
-interface TableHeaderProps {
+export interface TableHeaderProps {
   variant?: "dropdown" | "default";
 }
 
@@ -67,13 +67,19 @@ export function TableHeader({ variant = "default" }: TableHeaderProps) {
                         <Button
                           variant="ghost"
                           onClick={() => header.column.toggleSorting()}
-                          className="-ml-4 h-8 data-[state=open]:bg-accent"
+                          className="-ml-4 h-8 data-[state=open]:bg-accent cursor-pointer"
                         >
                           {flexRender(
                             header.column.columnDef.header,
                             header.getContext()
                           )}
-                          <ArrowUpDown className="ml-2 h-4 w-4" />
+                          {header.column.getIsSorted() === "desc" ? (
+                            <ArrowDownIcon className="ml-2 h-4 w-4" />
+                          ) : header.column.getIsSorted() === "asc" ? (
+                            <ArrowUpIcon className="ml-2 h-4 w-4" />
+                          ) : (
+                            <ArrowUpDown className="ml-2 h-4 w-4" />
+                          )}
                         </Button>
                       )
                     ) : (

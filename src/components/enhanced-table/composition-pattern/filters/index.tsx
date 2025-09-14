@@ -1,4 +1,5 @@
-import React, { lazy, Suspense } from "react";
+import  { lazy, Suspense } from "react";
+import type { InputFilterProps } from "./variants/input-filter";
 
 const Simple = lazy(() =>
   import("./variants/simple-filter").then((mod) => ({ default: mod.Simple }))
@@ -16,25 +17,36 @@ const Clear = lazy(() =>
   import("./clear").then((mod) => ({ default: mod.Clear }))
 );
 
+const Input = lazy(() =>
+  import("./variants/input-filter").then((mod) => ({
+    default: mod.InputFilter,
+  }))
+);
+
 export const TableFilters = {
-  Simple: (props: any) => (
+  Simple: () => (
     <Suspense fallback={null}>
-      <Simple {...props} />
+      <Simple />
     </Suspense>
   ),
-  Sheet: (props: any) => (
+  Sheet: () => (
     <Suspense fallback={null}>
-      <Sheet {...props} />
+      <Sheet />
     </Suspense>
   ),
-  Dialog: (props: any) => (
+  Dialog: () => (
     <Suspense fallback={null}>
-      <Dialog {...props} />
+      <Dialog />
     </Suspense>
   ),
-  Clear: (props: any) => (
+  Clear: () => (
     <Suspense fallback={null}>
-      <Clear {...props} />
+      <Clear />
+    </Suspense>
+  ),
+  Input: (props: InputFilterProps) => (
+    <Suspense fallback={null}>
+      <Input {...props} />
     </Suspense>
   ),
 };

@@ -25,11 +25,11 @@ function generateLead() {
   const name = faker.person.fullName();
   return {
     id: faker.string.uuid(),
-    name: faker.person.fullName(),
+    name,
     company: faker.company.name(),
     email: faker.internet.email({
-      firstName: name.split(" ")[0],
-      lastName: name.split(" ")[1],
+      firstName: name.split(" ")[0].toLowerCase(),
+      lastName: name.split(" ")[1].toLowerCase(),
     }),
     source: faker.helpers.arrayElement(leadSources),
     score: faker.number.int({ min: 300, max: 850 }),

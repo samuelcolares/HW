@@ -1,10 +1,21 @@
 interface TableRootBaseProps<TData, TValue> {
-  data: TData[]
-  columns: ColumnDef<TData, TValue>[]
-  children: React.ReactNode
-  enableSelection?: boolean
-  enableExpansion?: boolean
-  enableEditing?: boolean
+  data: TData[];
+  columns: ColumnDef<TData, TValue>[];
+  children: React.ReactNode;
+  enableSelection?: boolean;
+  enableExpansion?: boolean;
+  enableEditing?: boolean;
+  initialColumnVisibility?: VisibilityState;
+  tableName: string;
+  initialState?: {
+    sortingColumns: SortingState;
+  };
+  saveState?: {
+    sortingColumns: Dispatch<React.SetStateAction<SortingState>>;
+  };
+  noData: boolean;
+  emptyComponent: React.ReactNode;
+  loading: boolean;
 }
 
 interface TableRootWithColumnReorderProps<TData, TValue> extends TableRootBaseProps<TData, TValue> {
