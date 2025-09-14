@@ -60,9 +60,18 @@ export function TableRoot<TData, TValue>({
   emptyComponent,
 }: TableRootProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
-  const [sorting, setSorting] = React.useState<SortingState>(
-    initialState.sortingColumns
-  );
+  const [sorting, setSorting] = React.useState<SortingState>(() => {
+    const saved = localStorage.getItem(`${tableName}-sorting`);
+    if (saved !== null) {
+      try {
+        return JSON.parse(saved);
+      } catch (error) {
+        console.warn("Failed to parse sorting from localStorage:", error);
+        return initialState.sortingColumns;
+      }
+    }
+    return initialState.sortingColumns;
+  });
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
@@ -313,6 +322,13 @@ export function TableRoot<TData, TValue>({
       JSON.stringify(columnVisibility)
     );
   }, [columnVisibility, tableName]);
+
+  useEffect(() => {
+    localStorage.setItem(
+      `${tableName}-sorting`,
+      JSON.stringify(sorting)
+    );
+  }, [sorting, tableName]);
 
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
